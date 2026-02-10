@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host - Sala de Conferencia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">Conf-Peer</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link active" href="hall.html">Host</a>
+                <a class="nav-link" href="index.html">Client</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-12 col-lg-3">
+                <div class="card shadow-sm border-0 mb-3 text-center">
+                    <div class="card-body">
+                        <small class="text-muted fw-bold text-uppercase">ID de Sala</small>
+                        <h2 class="fw-bold text-primary mb-1" id="peer-id">...</h2>
+                        <div id="status-badge" class="badge bg-secondary mb-3">OFFLINE</div>
+                        <button id="close-room-btn" class="btn btn-danger btn-sm w-100 d-none">Cerrar Sala (Finalizar)</button>
+                    </div>
+                </div>
+
+                <div id="incoming-call-box" class="card border-primary d-none shadow-sm animate__animated animate__bounceIn">
+                    <div class="card-body text-center">
+                        <p class="mb-2 fw-bold text-primary">¡Invitado llamando!</p>
+                        <div class="d-grid gap-2">
+                            <button id="accept-btn" class="btn btn-success">Aceptar</button>
+                            <button id="reject-btn" class="btn btn-outline-secondary btn-sm">Rechazar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-9">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="bg-dark rounded shadow position-relative" style="aspect-ratio: 16/9;">
+                            <video id="local-video" autoplay muted playsinline class="w-100 h-100 rounded" style="object-fit: cover;"></video>
+                            <span class="position-absolute bottom-0 start-0 m-2 badge bg-dark opacity-75">Tú (Host)</span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="bg-dark rounded shadow position-relative d-flex align-items-center justify-content-center" style="aspect-ratio: 16/9;">
+                            <div id="mic-icon-guest" class="text-white text-center d-none">
+                                <i class="bi bi-mic-fill" style="font-size: 3rem;"></i>
+                                <p class="small m-0">Invitado sin video</p>
+                            </div>
+                            <video id="remote-video" autoplay playsinline class="w-100 h-100 rounded" style="object-fit: cover;"></video>
+                            <span class="position-absolute bottom-0 start-0 m-2 badge bg-primary opacity-75">Invitado</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="hall.js"></script>
+</body>
+</html>
