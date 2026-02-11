@@ -1,5 +1,8 @@
 <?php
 
+require_once "../controladores/usuarios.controlador.php";
+require_once "../modelos/usuarios.modelo.php";
+
 // Configurar cabeceras para respuestas JSON
 header('Content-Type: application/json; charset=utf-8');
 
@@ -9,11 +12,20 @@ $metodo = $_SERVER['REQUEST_METHOD'];
 // Procesar datos de entrada (JSON)
 $entrada = json_decode(file_get_contents('php://input'), true);
 
-if ($metodo === 'POST' && isset($_POST['ingUsuario']) && isset($_POST['ingPassword'])) {
-    $respuesta = ControladorUsuarios::ctrIngresoUsuario();
+/*=========================================
+MANEJO DE MÉTODOS HTTP PARA AUTENTICACIÓN
+==========================================*/
+if ($metodo === 'POST' && isset($entrada['cedula']) && isset($entrada['password'])) {
+    $respuesta = ControladorUsuarios::ctrIngresoUsuario($entrada);
     http_response_code($respuesta['status']);
     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     exit;
+} elseif ($metodo === 'POST' && isset($entrada['logout']) && $entrada['logout'] === true) {
+    $respuesta = ControladorUsuarios::ctrLogoutUsuario();
+    http_response_code($respuesta['status']);
+    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    exit;
+
 } else {
 
     http_response_code(405);

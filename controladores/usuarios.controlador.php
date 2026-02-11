@@ -7,21 +7,21 @@ class ControladorUsuarios
 	INGRESO DE USUARIO
 	=============================================*/
 
-	static public function ctrIngresoUsuario()
+	static public function ctrIngresoUsuario($entrada)
 	{
 
-        if (preg_match('/^[0-9]+$/', $_POST["ingUsuario"])) {
+        if (preg_match('/^[0-9]+$/', $entrada["cedula"])) {
 
-            $encriptar = crypt($_POST["ingPassword"], '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
+            $encriptar = crypt($entrada["password"], '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
 
             $tabla = "usuarios";
 
             $item = "cedula";
-            $valor = $_POST["ingUsuario"];
+            $valor = $entrada["cedula"];
 
             $respuesta = ModeloUsuarios::MdlMostrarUsuarios($tabla, $item, $valor);
 
-            if (is_array($respuesta) && $respuesta["cedula"] == $_POST["ingUsuario"] && $respuesta["password"] == $encriptar) {
+            if (is_array($respuesta) && $respuesta["cedula"] == $entrada["cedula"] && $respuesta["password"] == $encriptar) {
 
                 session_start();
 
@@ -45,14 +45,21 @@ class ControladorUsuarios
                     "fecha_ultimo_ingreso" => $fechaActual
                 );
 
-                $ultimoLogin = ModeloUsuarios::mdlActualizarUsuario($tabla, $datos);
+                $ultimoLogin = ModeloUsuarios::mdlEditarUsuario($tabla, $datos);
 
                 if ($ultimoLogin === true) {
                     
                     return array(
                         "success" => true,
                         "status" => 200,
-                        "mensaje" => "Ingreso exitoso"
+                        "mensaje" => "Ingreso exitoso",
+                        "data" => array(
+                            "id" => $_SESSION["id"],
+                            "nombres" => $_SESSION["nombres"],
+                            "apellidos" => $_SESSION["apellidos"],
+                            "cedula" => $_SESSION["cedula"],
+                            "status" => $_SESSION["iniciarSesion"]
+                        )
                     );
                 }
                 
@@ -76,24 +83,63 @@ class ControladorUsuarios
 	}
 
 	/*=============================================
+	CERRAR SESIÓN DE USUARIO
+	=============================================*/
+
+    static public function ctrLogoutUsuario() {
+
+        if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] !== "ok") {
+            return array(
+                "success" => false,
+                "status" => 400,
+                "mensaje" => "Debe iniciar sesión para cerrar sesión"
+            );
+        }
+
+        $respuesta = ModeloUsuarios::mdlLogoutUsuario($_SESSION["id"]);
+
+        if ($respuesta === true) {
+            
+            $_SESSION["iniciarSesion"] = null;
+            $_SESSION["id"] = null;
+            $_SESSION["nombres"] = null;
+            $_SESSION["apellidos"] = null;
+            $_SESSION["cedula"] = null;
+            
+            return array(
+                "success" => true,
+                "status" => 200,
+                "mensaje" => "Sesión cerrada con éxito"
+            );
+        } else {
+            return array(
+                "success" => false,
+                "status" => 500,
+                "mensaje" => "Error al cerrar sesión",
+                "error" => $respuesta
+            );
+        }
+    }
+
+	/*=============================================
 	REGISTRO DE USUARIO
 	=============================================*/
 
-	static public function ctrCrearUsuario()
+	static public function ctrCrearUsuario($entrada)
 	{
 
         $tabla = "usuarios";
         
-        $encriptar = crypt($_POST["nuevoPassword"], '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
+        $encriptar = crypt($entrada["password"], '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
 
         $datos = array(
-            "nombres" => strtoupper(trim($_POST["nuevoNombres"])),
-            "apellidos" => strtoupper(trim($_POST["nuevoApellidos"])),
-            "cedula" => trim($_POST["nuevoCedula"]),
+            "nombres" => ucfirst(trim($entrada["nombres"])),
+            "apellidos" => ucfirst(trim($entrada["apellidos"])),
+            "cedula" => trim($entrada["cedula"]),
             "password" => $encriptar
         );
 
-        $respuesta = ModeloUsuarios::mdlIngresarUsuario($tabla, $datos);
+        $respuesta = ModeloUsuarios::mdlCrearUsuario($tabla, $datos);
 
         if ($respuesta === true) {
 
@@ -123,42 +169,32 @@ class ControladorUsuarios
 
 		$respuesta = ModeloUsuarios::MdlMostrarUsuarios($tabla, $item, $valor);
 
-		return $respuesta;
+		return array(
+            "success" => true,
+            "status" => 200,
+            "data" => $respuesta
+        );
 	}
 
 	/*=============================================
 	EDITAR USUARIO
 	=============================================*/
 
-	static public function ctrEditarUsuario()
+	static public function ctrEditarUsuario($entrada)
 	{
 
         $tabla = "usuarios";
 
-        if ($_POST["editarPassword"] != "") {
+        if (isset($entrada["password"]) && !empty($entrada["password"])) {
 
-            $encriptar = crypt($_POST["editarPassword"], '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
-        } else {
+            $entrada["password"] = crypt($entrada["password"], '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
+        } 
 
-            
-            $encriptar = $_POST["passwordActual"];
-        }
+        $entrada["fecha_modificacion"] = date('Y-m-d H:i:s');
 
-        $fechaActual = date('Y-m-d H:i:s');
+        $respuesta = ModeloUsuarios::mdlEditarUsuario($tabla, $entrada);
 
-
-        $datos = array(
-            "id" => $_POST["idUsuario"],
-            "nombres" => $_POST["editarNombres"],
-            "usuario" => strtolower($_POST["editarUsuario"]),
-            "email" => strtolower($_POST["editarEmail"]),
-            "password" => $encriptar,
-            "fecha_actualizacion" => $fechaActual
-        );
-
-        $respuesta = ModeloUsuarios::mdlEditarUsuario($tabla, $datos);
-
-        if ($respuesta == "ok") {
+        if ($respuesta === true) {
 
             return array(
                 "success" => true,
@@ -170,7 +206,8 @@ class ControladorUsuarios
             return array(
                 "success" => false,
                 "status" => 500,
-                "mensaje" => "Error al editar el usuario"
+                "mensaje" => "Error al editar el usuario",
+                "error" => $respuesta
             );
         }
 	}
@@ -179,14 +216,14 @@ class ControladorUsuarios
 	ELIMINAR USUARIO
 	=============================================*/
 
-	static public function ctrEliminarUsuario(){
+	static public function ctrEliminarUsuario($id){
 
         $tabla ="usuarios";
-        $datos = $_POST["idEliminarUsuario"];
+        $datos = $id;
 
         $respuesta = ModeloUsuarios::mdlEliminarUsuario($tabla, $datos);
 
-        if($respuesta == "ok"){
+        if($respuesta == true){
 
             return array(
                 "success" => true,
