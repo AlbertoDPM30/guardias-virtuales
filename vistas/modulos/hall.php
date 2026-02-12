@@ -1,24 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Host - Sala de Conferencia</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-</head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Conf-Peer</a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link active" href="hall.html">Host</a>
-                <a class="nav-link" href="index.html">Client</a>
-            </div>
-        </div>
-    </nav>
 
+<script src="libraries/peerjs/peerjs.min.js"></script>
+<div class="bg-light">
     <div class="container">
         <div class="row g-4">
             <div class="col-12 col-lg-3">
@@ -64,6 +46,5 @@
             </div>
         </div>
     </div>
-    <script src="hall.js"></script>
-</body>
-</html>
+    <script src="vistas/js/hall.js"></script>
+</div>

@@ -1,0 +1,33 @@
+[12-Feb-2026 15:55:30 Europe/Berlin] PHP Warning:  include(modulos/cabezote.php): Failed to open stream: No such file or directory in D:\xampp\htdocs\peerjs\vistas\plantilla.php on line 19
+[12-Feb-2026 15:55:30 Europe/Berlin] PHP Warning:  include(): Failed opening 'modulos/cabezote.php' for inclusion (include_path='D:\xampp\php\PEAR') in D:\xampp\htdocs\peerjs\vistas\plantilla.php on line 19
+[12-Feb-2026 15:55:30 Europe/Berlin] PHP Warning:  include(modulos/footer.php): Failed to open stream: No such file or directory in D:\xampp\htdocs\peerjs\vistas\plantilla.php on line 59
+[12-Feb-2026 15:55:30 Europe/Berlin] PHP Warning:  include(): Failed opening 'modulos/footer.php' for inclusion (include_path='D:\xampp\php\PEAR') in D:\xampp\htdocs\peerjs\vistas\plantilla.php on line 59
+[12-Feb-2026 15:55:35 Europe/Berlin] PHP Warning:  include(modulos/cabezote.php): Failed to open stream: No such file or directory in D:\xampp\htdocs\peerjs\vistas\plantilla.php on line 19
+[12-Feb-2026 15:55:35 Europe/Berlin] PHP Warning:  include(): Failed opening 'modulos/cabezote.php' for inclusion (include_path='D:\xampp\php\PEAR') in D:\xampp\htdocs\peerjs\vistas\plantilla.php on line 19
+[12-Feb-2026 15:55:35 Europe/Berlin] PHP Warning:  include(modulos/footer.php): Failed to open stream: No such file or directory in D:\xampp\htdocs\peerjs\vistas\plantilla.php on line 59
+[12-Feb-2026 15:55:35 Europe/Berlin] PHP Warning:  include(): Failed opening 'modulos/footer.php' for inclusion (include_path='D:\xampp\php\PEAR') in D:\xampp\htdocs\peerjs\vistas\plantilla.php on line 59
+[12-Feb-2026 16:33:14 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to undefined function location() in D:\xampp\htdocs\peerjs\vistas\modulos\header.php:11
+Stack trace:
+#0 D:\xampp\htdocs\peerjs\vistas\plantilla.php(19): include()
+#1 D:\xampp\htdocs\peerjs\controladores\plantilla.controlador.php(7): include('D:\\xampp\\htdocs...')
+#2 D:\xampp\htdocs\peerjs\index.php(27): ControladorPlantilla::ctrPlantilla()
+#3 {main}
+  thrown in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 11
+[12-Feb-2026 16:43:31 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 3
+[12-Feb-2026 16:43:31 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 5
+[12-Feb-2026 16:43:31 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 6
+[12-Feb-2026 16:44:59 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 3
+[12-Feb-2026 16:44:59 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 5
+[12-Feb-2026 16:44:59 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 6
+[12-Feb-2026 17:59:51 Europe/Berlin] PHP Warning:  include(modulos/contacto.php): Failed to open stream: No such file or directory in D:\xampp\htdocs\peerjs\vistas\plantilla.php on line 59
+[12-Feb-2026 17:59:51 Europe/Berlin] PHP Warning:  include(): Failed opening 'modulos/contacto.php' for inclusion (include_path='D:\xampp\php\PEAR') in D:\xampp\htdocs\peerjs\vistas\plantilla.php on line 59
+[12-Feb-2026 17:59:55 Europe/Berlin] PHP Warning:  include(modulos/contacto.php): Failed to open stream: No such file or directory in D:\xampp\htdocs\peerjs\vistas\plantilla.php on line 59
+[12-Feb-2026 17:59:55 Europe/Berlin] PHP Warning:  include(): Failed opening 'modulos/contacto.php' for inclusion (include_path='D:\xampp\php\PEAR') in D:\xampp\htdocs\peerjs\vistas\plantilla.php on line 59
+[12-Feb-2026 20:34:02 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 3
+[12-Feb-2026 20:34:02 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 5
+[12-Feb-2026 20:34:02 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 6
+[12-Feb-2026 20:34:02 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 8
+[12-Feb-2026 20:43:11 Europe/Berlin] PHP Parse error:  syntax error, unexpected token ":" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 8
+[12-Feb-2026 20:43:21 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 3
+[12-Feb-2026 20:43:21 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 5
+[12-Feb-2026 20:43:21 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 6

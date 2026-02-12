@@ -1,24 +1,7 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client - Unirse</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-</head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Conf-Peer</a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="hall.html">Host</a>
-                <a class="nav-link active" href="index.html">Client</a>
-            </div>
-        </div>
-    </nav>
+<script src="libraries/peerjs/peerjs.min.js"></script>
+<script src="vistas/js/app.js"></script>
 
+<div class="bg-light vh-100 d-flex align-items-center">
     <div class="container">
         <div class="row justify-content-center g-4">
             <div class="col-12 col-md-5">
@@ -31,7 +14,7 @@
                             <label class="form-check-label" for="video-toggle">Enviar mi video</label>
                         </div>
                         <div class="d-grid gap-2">
-                            <button id="join-btn" class="btn btn-primary">Llamar Anfitrión</button>
+                            <button id="join-btn" class="btn btn-primary">Llamar</button>
                             <button id="hangup-btn" class="btn btn-outline-danger d-none">Desconectarse</button>
                         </div>
                     </div>
@@ -41,7 +24,7 @@
             <div class="col-12 col-md-7">
                 <div class="bg-dark rounded shadow position-relative" style="aspect-ratio: 16/9;">
                     <video id="remote-video" autoplay playsinline class="w-100 h-100 rounded" style="object-fit: cover;"></video>
-                    <span class="position-absolute bottom-0 start-0 m-2 badge bg-primary">Anfitrión</span>
+                    <span class="position-absolute bottom-0 start-0 m-2 badge bg-primary">Ejecutivo</span>
                     
                     <div id="local-preview" class="position-absolute top-0 end-0 m-2 d-none" style="width: 140px; aspect-ratio: 16/9;">
                         <video id="local-video" autoplay muted playsinline class="w-100 h-100 rounded border border-white" style="object-fit: cover;"></video>
@@ -51,6 +34,4 @@
             </div>
         </div>
     </div>
-    <script src="app.js"></script>
-</body>
-</html>
+</div>

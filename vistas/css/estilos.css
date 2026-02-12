@@ -1,0 +1,30 @@
+/* Estilos personalizados para mejorar la estética */
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+  border-radius: 1rem; /* Bordes más redondeados */
+}
+
+.form-control {
+  border-radius: 0.5rem;
+  border: 1px solid #dee2e6;
+}
+
+/* Efecto de enfoque en los inputs */
+.form-control:focus {
+  box-shadow: 0 0 0 0.25 redrem rgba(13, 110, 253, 0.15);
+  border-color: #0d6efd;
+}
+
+.btn-primary {
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
