@@ -31,3 +31,10 @@ Stack trace:
 [12-Feb-2026 20:43:21 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 3
 [12-Feb-2026 20:43:21 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 5
 [12-Feb-2026 20:43:21 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 6
+[19-Feb-2026 18:56:44 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 3
+[19-Feb-2026 18:56:44 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 5
+[19-Feb-2026 18:56:44 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 6
+[19-Feb-2026 18:58:53 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 3
+[19-Feb-2026 18:58:53 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 5
+[19-Feb-2026 18:58:53 Europe/Berlin] PHP Warning:  Undefined array key "ruta" in D:\xampp\htdocs\peerjs\vistas\modulos\header.php on line 6
+[19-Feb-2026 20:30:22 Europe/Berlin] PHP Warning:  Undefined array key "nombre" in D:\xampp\htdocs\peerjs\vistas\modulos\dashboard.php on line 4

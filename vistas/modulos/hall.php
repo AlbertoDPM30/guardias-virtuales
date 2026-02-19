@@ -1,6 +1,4 @@
-
-<script src="libraries/peerjs/peerjs.min.js"></script>
-<div class="bg-light">
+<div class="bg-light ">
     <div class="container">
         <div class="row g-4">
             <div class="col-12 col-lg-3">

@@ -20,8 +20,8 @@ if ($metodo === 'POST' && isset($entrada['cedula']) && isset($entrada['password'
     http_response_code($respuesta['status']);
     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     exit;
-    
-} elseif ($metodo === 'POST' && isset($entrada['logout']) && $entrada['logout'] === true) {
+
+} elseif ($metodo === 'POST' && isset($entrada['logout']) && $entrada['logout'] == true) {
     $respuesta = ControladorUsuarios::ctrLogoutUsuario();
     http_response_code($respuesta['status']);
     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);

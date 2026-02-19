@@ -45,9 +45,6 @@ class ModeloUsuarios {
             $stmt = Conexion::conectar()->prepare("UPDATE usuarios SET status = 0 WHERE id = :id");
             $stmt->bindParam(":id", $id, PDO::PARAM_INT);
             $stmt->execute();
-            session_start();
-            session_unset();
-            session_destroy();
             return true; // Retorna true si el logout fue exitoso
 
         } catch (Exception $e) {

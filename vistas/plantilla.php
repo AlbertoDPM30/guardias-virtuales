@@ -1,3 +1,9 @@
+<?php
+
+session_start();
+
+?>
+
 <!DOCTYPE html>
 <html lang="es_VE">
 <head>
@@ -14,6 +20,7 @@
     <!-- SCRIPTS -->
     <script src="libraries/jquery/jquery-4-0-0.min.js"></script>
     <script src="libraries/bootstrap/js/bootstrap.min.js"></script>
+    <script src="libraries/peerjs/peerjs.min.js.map"></script>
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -21,7 +28,6 @@
     <div class="wrapper">
 
     <?php
-        session_start();
 
         // Capturamos la ruta actual o definimos 'inicio' por defecto
         $ruta = isset($_GET["ruta"]) ? $_GET["ruta"] : "inicio";
@@ -51,11 +57,16 @@
             // Redirección al Dashboard (hall) si intenta ir a rutas públicas
             if ($ruta == "login" || $ruta == "inicio") {
                 
+                header("Location: hall");
                 include "modulos/hall.php";
 
             } 
             // Acceso a rutas protegidas
-            else if ($ruta == "hall" || $ruta == "usuarios") {
+            else if (
+                $ruta == "hall"     ||
+                $ruta == "usuarios" ||
+                $ruta == "dashboard"
+            ) {
                 
                 include "modulos/" . $ruta . ".php";
 

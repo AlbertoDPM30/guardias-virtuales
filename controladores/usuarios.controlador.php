@@ -88,15 +88,24 @@ class ControladorUsuarios
 
     static public function ctrLogoutUsuario() {
 
-        if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] !== "ok") {
-            return array(
-                "success" => false,
-                "status" => 400,
-                "mensaje" => "Debe iniciar sesión para cerrar sesión"
-            );
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
 
-        $respuesta = ModeloUsuarios::mdlLogoutUsuario($_SESSION["id"]);
+        // if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] != "ok") {
+        //     return array(
+        //         "success" => false,
+        //         "status" => 400,
+        //         "mensaje" => "Debe iniciar sesión para cerrar sesión"
+        //     );
+        // }
+        
+        $idUsuario = $_SESSION["id"];
+        
+        $respuesta = ModeloUsuarios::mdlLogoutUsuario($idUsuario);
+
+        session_unset();
+        session_destroy();
 
         if ($respuesta === true) {
             
