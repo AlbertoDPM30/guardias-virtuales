@@ -2,20 +2,20 @@
 
 require_once "conexion.php";
 
-class ModeloUsuarios {
+class ModeloHall {
 
     /*=============================================
-    MOSTRAR USUARIOS (GET)
+    MOSTRAR SALAS (GET)
     =============================================*/
-    static public function mdlMostrarUsuarios($tabla, $item, $valor) {
+    static public function mdlMostrarHalls($tabla, $item, $valor) {
         try {
             if ($item != null) {
-                // Obtener un usuario específico
+                // Obtener una sala específica
                 $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :valor");
                 $stmt->bindParam(":valor", $valor, PDO::PARAM_STR);
             } else {
-                // Obtener todos los usuarios
-                $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla ORDER BY nombres ASC");
+                // Obtener todas las salas
+                $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla ORDER BY numero ASC");
             }
 
             $stmt->execute();
@@ -27,7 +27,7 @@ class ModeloUsuarios {
             }
 
         } catch (PDOException $e) {
-            error_log("Error en mdlMostrarUsuarios: " . $e->getMessage());
+            error_log("Error en mdlMostrarHalls: " . $e->getMessage());
             return false; // Retorna false en caso de error
         } finally {
             if ($stmt) {
@@ -37,51 +37,30 @@ class ModeloUsuarios {
     }
 
     /*=============================================
-    REGISTRO DE USUARIO (POST)
+    REGISTRO DE SALA (POST)
     =============================================*/
-    static public function mdlLogoutUsuario($id) {
-        try {
-
-            $stmt = Conexion::conectar()->prepare("UPDATE usuarios SET status = 0 WHERE id = :id");
-            $stmt->bindParam(":id", $id, PDO::PARAM_INT);
-            $stmt->execute();
-            return true; // Retorna true si el logout fue exitoso
-
-        } catch (Exception $e) {
-            error_log("Error en mdlLogoutUsuario: " . $e->getMessage());
-            return $e->getMessage(); // Retorna el mensaje de error en caso de excepción
-        }
-    }
-
-    /*=============================================
-    REGISTRO DE USUARIO (POST)
-    =============================================*/
-    static public function mdlCrearUsuario ($tabla, $datos) {
+    static public function mdlCrearHall ($tabla, $datos) {
         try {
             // Consulta SQL para insertar un nuevo usuario
             $stmt = Conexion::conectar()->prepare(
                 "INSERT INTO 
-                $tabla (nombres, apellidos, cedula, password, status) 
-                VALUES (:nombres, :apellidos, :cedula, :password, :status)"
+                $tabla (numero) 
+                VALUES (:numero)"
             );
 
             // Vincular los parámetros
-            $stmt->bindParam(":nombres", $datos["nombres"], PDO::PARAM_STR);
-            $stmt->bindParam(":apellidos", $datos["apellidos"], PDO::PARAM_STR);
-            $stmt->bindParam(":cedula", $datos["cedula"], PDO::PARAM_INT);
-            $stmt->bindParam(":password", $datos["password"], PDO::PARAM_STR);
-            $stmt->bindParam(":status", $datos["status"], PDO::PARAM_INT);
+            $stmt->bindParam(":numero", $datos["numero"], PDO::PARAM_STR);
 
             // Ejecutar la consulta SQL
             if ($stmt->execute()) {
                 return true; // Retornar True si la inserción fue exitosa
             } else {
-                error_log("Error al crear usuario: " . implode(" ", $stmt->errorInfo()));
+                error_log("Error al crear sala: " . implode(" ", $stmt->errorInfo()));
                 return false; // Retornar False si hubo un problema
             }
 
         } catch (PDOException $e) {
-            error_log("Error en mdlCrearUsuario: " . $e->getMessage());
+            error_log("Error en mdlCrearHall: " . $e->getMessage());
             return false; // Retornar False en caso de excepción
         } finally {
             if ($stmt) {
@@ -91,14 +70,14 @@ class ModeloUsuarios {
     }
 
     /*=============================================
-    ACTUALIZAR USUARIO (PUT)
+    ACTUALIZAR SALA (PUT)
     =============================================*/
-    static public function mdlEditarUsuario($tabla, $datos) {
+    static public function mdlEditarHall($tabla, $datos) {
         try {
 
             // Agregar "id" si no está presente
             if (!isset($datos['id'])) {
-                error_log("Error en mdlEditarUsuario: 'id' no está presente en los datos.");
+                error_log("Error en mdlEditarHall: 'id' no está presente en los datos.");
                 return "'id' no está presente en los datos.";
             }
 
@@ -115,7 +94,7 @@ class ModeloUsuarios {
             }
 
             // Si no hay campos para actualizar además del ID y updated_at, salir.
-            if (empty($setClauses) && !isset($datos['fecha_modificacion'])) {
+            if (empty($setClauses) && !isset($datos['fecha_actualizacion'])) {
                 return "No hay campos para actualizar la fecha.";
             }
 
@@ -142,12 +121,12 @@ class ModeloUsuarios {
             if ($stmt->execute()) {
                 return true; // Retornar True si la actualización fue exitosa
             } else {
-                error_log("Error al actualizar usuario: " . implode(" ", $stmt->errorInfo()));
+                error_log("Error al actualizar sala: " . implode(" ", $stmt->errorInfo()));
                 return implode(" ", $stmt->errorInfo()); // Retornar False si hubo un problema
             }
 
         } catch (PDOException $e) {
-            error_log("Error en mdlEditarUsuario: " . $e->getMessage());
+            error_log("Error en mdlEditarHall: " . $e->getMessage());
             return $e->getMessage(); // Retornar False si hubo un problema
         } finally {
             $stmt = null;
@@ -155,9 +134,9 @@ class ModeloUsuarios {
     }
 
     /*=============================================
-    ELIMINAR USUARIO (DELETE)
+    ELIMINAR SALA (DELETE)
     =============================================*/
-    static public function mdlEliminarUsuario($tabla, $id) {
+    static public function mdlEliminarHall($tabla, $id) {
         try {
             $stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
             $stmt->bindParam(":id", $id, PDO::PARAM_INT);
@@ -165,12 +144,12 @@ class ModeloUsuarios {
             if ($stmt->execute()) {
                 return true; // Retornar True si la eliminación fue exitosa
             } else {
-                error_log("Error al eliminar usuario: " . implode(" ", $stmt->errorInfo()));
+                error_log("Error al eliminar sala: " . implode(" ", $stmt->errorInfo()));
                 return false; // Retornar False si hubo un problema
             }
 
         } catch (PDOException $e) {
-            error_log("Error en mdlEliminarUsuario: " . $e->getMessage());
+            error_log("Error en mdlEliminarHall: " . $e->getMessage());
             return false; // Retornar False si hubo un problema
         } finally {
             if ($stmt) {

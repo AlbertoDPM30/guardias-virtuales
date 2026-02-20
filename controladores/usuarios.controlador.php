@@ -92,14 +92,6 @@ class ControladorUsuarios
             session_start();
         }
 
-        // if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] != "ok") {
-        //     return array(
-        //         "success" => false,
-        //         "status" => 400,
-        //         "mensaje" => "Debe iniciar sesión para cerrar sesión"
-        //     );
-        // }
-        
         $idUsuario = $_SESSION["id"];
         
         $respuesta = ModeloUsuarios::mdlLogoutUsuario($idUsuario);

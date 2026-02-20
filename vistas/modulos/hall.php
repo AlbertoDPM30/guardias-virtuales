@@ -1,3 +1,5 @@
+<?php if(!isset($_GET['id'])) { header("Location: dashboard"); exit(); } ?>
+
 <div class="bg-light ">
     <div class="container">
         <div class="row g-4">

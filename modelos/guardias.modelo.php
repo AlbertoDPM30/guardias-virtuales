@@ -2,32 +2,32 @@
 
 require_once "conexion.php";
 
-class ModeloUsuarios {
+class ModeloGuardias {
 
     /*=============================================
-    MOSTRAR USUARIOS (GET)
+    MOSTRAR GUARDIAS (GET)
     =============================================*/
-    static public function mdlMostrarUsuarios($tabla, $item, $valor) {
+    static public function mdlMostrarGuardias($tabla, $item, $valor) {
         try {
             if ($item != null) {
-                // Obtener un usuario específico
+                // Obtener una guardia específica
                 $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :valor");
                 $stmt->bindParam(":valor", $valor, PDO::PARAM_STR);
             } else {
-                // Obtener todos los usuarios
-                $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla ORDER BY nombres ASC");
+                // Obtener todas las guardias
+                $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla ORDER BY id ASC");
             }
 
             $stmt->execute();
 
-            if ($item != null) {
+            if ($item != null && $item === "id") {
                 return $stmt->fetch(PDO::FETCH_ASSOC); 
             } else {
                 return $stmt->fetchAll(PDO::FETCH_ASSOC); 
             }
 
         } catch (PDOException $e) {
-            error_log("Error en mdlMostrarUsuarios: " . $e->getMessage());
+            error_log("Error en mdlMostrarGuardias: " . $e->getMessage());
             return false; // Retorna false en caso de error
         } finally {
             if ($stmt) {
@@ -37,51 +37,32 @@ class ModeloUsuarios {
     }
 
     /*=============================================
-    REGISTRO DE USUARIO (POST)
+    REGISTRO DE GUARDIA (POST)
     =============================================*/
-    static public function mdlLogoutUsuario($id) {
+    static public function mdlCrearGuardia ($tabla, $datos) {
         try {
-
-            $stmt = Conexion::conectar()->prepare("UPDATE usuarios SET status = 0 WHERE id = :id");
-            $stmt->bindParam(":id", $id, PDO::PARAM_INT);
-            $stmt->execute();
-            return true; // Retorna true si el logout fue exitoso
-
-        } catch (Exception $e) {
-            error_log("Error en mdlLogoutUsuario: " . $e->getMessage());
-            return $e->getMessage(); // Retorna el mensaje de error en caso de excepción
-        }
-    }
-
-    /*=============================================
-    REGISTRO DE USUARIO (POST)
-    =============================================*/
-    static public function mdlCrearUsuario ($tabla, $datos) {
-        try {
-            // Consulta SQL para insertar un nuevo usuario
+            // Consulta SQL para insertar un nuevo guardia
             $stmt = Conexion::conectar()->prepare(
                 "INSERT INTO 
-                $tabla (nombres, apellidos, cedula, password, status) 
-                VALUES (:nombres, :apellidos, :cedula, :password, :status)"
+                $tabla (id_sala, id_usuario, inicio_guardia) 
+                VALUES (:id_sala, :id_usuario, :inicio_guardia)"
             );
 
             // Vincular los parámetros
-            $stmt->bindParam(":nombres", $datos["nombres"], PDO::PARAM_STR);
-            $stmt->bindParam(":apellidos", $datos["apellidos"], PDO::PARAM_STR);
-            $stmt->bindParam(":cedula", $datos["cedula"], PDO::PARAM_INT);
-            $stmt->bindParam(":password", $datos["password"], PDO::PARAM_STR);
-            $stmt->bindParam(":status", $datos["status"], PDO::PARAM_INT);
+            $stmt->bindParam(":id_sala", $datos["id_sala"], PDO::PARAM_INT);
+            $stmt->bindParam(":id_usuario", $datos["id_usuario"], PDO::PARAM_INT);
+            $stmt->bindParam(":inicio_guardia", $datos["inicio_guardia"], PDO::PARAM_STR);
 
             // Ejecutar la consulta SQL
             if ($stmt->execute()) {
                 return true; // Retornar True si la inserción fue exitosa
             } else {
-                error_log("Error al crear usuario: " . implode(" ", $stmt->errorInfo()));
+                error_log("Error al crear guardia: " . implode(" ", $stmt->errorInfo()));
                 return false; // Retornar False si hubo un problema
             }
 
         } catch (PDOException $e) {
-            error_log("Error en mdlCrearUsuario: " . $e->getMessage());
+            error_log("Error en mdlCrearGuardia: " . $e->getMessage());
             return false; // Retornar False en caso de excepción
         } finally {
             if ($stmt) {
@@ -91,14 +72,14 @@ class ModeloUsuarios {
     }
 
     /*=============================================
-    ACTUALIZAR USUARIO (PUT)
+    ACTUALIZAR GUARDIA (PUT)
     =============================================*/
-    static public function mdlEditarUsuario($tabla, $datos) {
+    static public function mdlEditarGuardia($tabla, $datos) {
         try {
 
             // Agregar "id" si no está presente
             if (!isset($datos['id'])) {
-                error_log("Error en mdlEditarUsuario: 'id' no está presente en los datos.");
+                error_log("Error en mdlEditarGuardia: 'id' no está presente en los datos.");
                 return "'id' no está presente en los datos.";
             }
 
@@ -112,11 +93,6 @@ class ModeloUsuarios {
                     $setClauses[] = "$key = :$key";
                     $bindParams[":$key"] = $value;
                 }
-            }
-
-            // Si no hay campos para actualizar además del ID y updated_at, salir.
-            if (empty($setClauses) && !isset($datos['fecha_modificacion'])) {
-                return "No hay campos para actualizar la fecha.";
             }
 
            // Construir la consulta SQL
@@ -142,12 +118,12 @@ class ModeloUsuarios {
             if ($stmt->execute()) {
                 return true; // Retornar True si la actualización fue exitosa
             } else {
-                error_log("Error al actualizar usuario: " . implode(" ", $stmt->errorInfo()));
+                error_log("Error al actualizar sala: " . implode(" ", $stmt->errorInfo()));
                 return implode(" ", $stmt->errorInfo()); // Retornar False si hubo un problema
             }
 
         } catch (PDOException $e) {
-            error_log("Error en mdlEditarUsuario: " . $e->getMessage());
+            error_log("Error en mdlEditarGuardia: " . $e->getMessage());
             return $e->getMessage(); // Retornar False si hubo un problema
         } finally {
             $stmt = null;
@@ -155,9 +131,9 @@ class ModeloUsuarios {
     }
 
     /*=============================================
-    ELIMINAR USUARIO (DELETE)
+    ELIMINAR GUARDIA (DELETE)
     =============================================*/
-    static public function mdlEliminarUsuario($tabla, $id) {
+    static public function mdlEliminarGuardia($tabla, $id) {
         try {
             $stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
             $stmt->bindParam(":id", $id, PDO::PARAM_INT);
@@ -165,12 +141,12 @@ class ModeloUsuarios {
             if ($stmt->execute()) {
                 return true; // Retornar True si la eliminación fue exitosa
             } else {
-                error_log("Error al eliminar usuario: " . implode(" ", $stmt->errorInfo()));
+                error_log("Error al eliminar guardia: " . implode(" ", $stmt->errorInfo()));
                 return false; // Retornar False si hubo un problema
             }
 
         } catch (PDOException $e) {
-            error_log("Error en mdlEliminarUsuario: " . $e->getMessage());
+            error_log("Error en mdlEliminarGuardia: " . $e->getMessage());
             return false; // Retornar False si hubo un problema
         } finally {
             if ($stmt) {

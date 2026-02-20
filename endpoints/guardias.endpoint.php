@@ -1,7 +1,7 @@
 <?php
 
-require_once "../controladores/hall.controlador.php";
-require_once "../modelos/hall.modelo.php";
+require_once "../controladores/guardias.controlador.php";
+require_once "../modelos/guardias.modelo.php";
 
 // Configurar cabeceras para respuestas JSON
 header('Content-Type: application/json; charset=utf-8');
@@ -13,45 +13,65 @@ $metodo = $_SERVER['REQUEST_METHOD'];
 $entrada = json_decode(file_get_contents('php://input'), true);
 
 /*=========================================
-MANEJO DE MÉTODOS HTTP PARA salaS
+MANEJO DE MÉTODOS HTTP PARA USUARIOS
 ==========================================*/
 switch ($metodo) {
 
     /*=========================================
-    OBTENER SALA(S)
+    OBTENER GUARDIA(S)
     ==========================================*/
     case 'GET':
+        $filtroId;
+        $item;
+        switch (true) {
+            case isset($_GET['id']):
+                $filtroId = $_GET['id'];
+                $item = "id";
+                break;
+            case isset($_GET['id_usuario']):
+                $filtroId = $_GET['id_usuario'];
+                $item = "id_usuario";
+                break;
+            case isset($_GET['id_sala']):
+                $filtroId = $_GET['id_sala'];
+                $item = "id_sala";
+                break;
+            default:
+                $filtroId = null;
+                $item = null;
+        }
+
         $id = isset($_GET['id']) ? $_GET['id'] : null;
-        $respuesta = ControladorHall::ctrMostrarHall($id ? "id" : null, $id);
+        $respuesta = ControladorGuardias::ctrMostrarGuardia($item, $filtroId);
         http_response_code($respuesta['status']);
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         break;
 
     /*=========================================
-    REGISTRAR SALA
+    REGISTRAR GUARDIA
     ==========================================*/
     case 'POST':
-        if (empty($entrada['numero'])) {
+        if (empty($entrada['id_sala']) || empty($entrada['id_usuario']) || empty($entrada['inicio_guardia'])) {
             echo json_encode(["mensaje" => "Todos los campos son obligatorios"], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             exit;
         }
 
-        $respuesta = ControladorHall::ctrCrearHall($entrada);
+        $respuesta = ControladorGuardias::ctrCrearGuardia($entrada);
         http_response_code($respuesta['status']);
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         break;
 
     /*=========================================
-    EDITAR SALA
+    EDITAR GUARDIA
     ==========================================*/
     case 'PUT':
-        $respuesta = ControladorHall::ctrEditarHall($entrada);
+        $respuesta = ControladorGuardias::ctrEditarGuardia($entrada);
         http_response_code($respuesta['status']);
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         break;
 
     /*=========================================
-    ELIMINAR SALA
+    ELIMINAR GUARDIA
     ==========================================*/
     case 'DELETE':
         $id = isset($_GET['id']) ? $_GET['id'] : null;
@@ -60,11 +80,11 @@ switch ($metodo) {
             echo json_encode([
                 "status" => 400,
                 "success" => false,
-                "message" => "Se requiere el ID para eliminar un sala."
+                "message" => "Se requiere el ID para eliminar una guardia."
             ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             break;
         }
-        $respuesta = ControladorHall::ctrEliminarHall($id);
+        $respuesta = ControladorGuardias::ctrEliminarGuardia($id);
         http_response_code($respuesta['status']);
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         break;
@@ -81,12 +101,12 @@ switch ($metodo) {
             echo json_encode([
                 "status" => 400,
                 "success" => false,
-                "message" => "Se requiere 'id' y 'status' para actualizar el estado del sala."
+                "message" => "Se requiere 'id' y 'status' para actualizar el estado de la guardia."
             ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             break;
         }
 
-        $respuesta = ControladorHall::ctrActualizarStatusHall($id, $status);
+        $respuesta = ControladorGuardias::ctrActualizarStatusGuardia($id, $status);
         http_response_code($respuesta['status']);
         echo json_encode($respuesta, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         break;
@@ -99,7 +119,7 @@ switch ($metodo) {
         echo json_encode([
             "status" => 405,
             "success" => false,
-            "message" => "Método no permitido para la ruta de salas."
+            "message" => "Método no permitido para la ruta de usuarios."
         ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         break;
 }

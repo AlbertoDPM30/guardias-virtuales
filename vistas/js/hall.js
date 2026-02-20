@@ -14,12 +14,12 @@ const $statusBadge = $("#status-badge");
 const $callBox = $("#incoming-call-box");
 const $closeBtn = $("#close-room-btn");
 
-// 1. Iniciar cámara de inmediato
+// Iniciar cámara de inmediato
 navigator.mediaDevices
   .getUserMedia({ video: true, audio: true })
   .then((stream) => {
     localStream = stream;
-    // En jQuery, para acceder a la propiedad srcObject, usamos el elemento nativo [0]
+
     $localVideo[0].srcObject = stream;
   })
   .catch((err) => console.error("Error cámara:", err));
@@ -66,7 +66,7 @@ peer.on("call", (call) => {
         }, 1000);
       });
 
-      // 2. Si el invitado se desconecta, refrescar host
+      // Si el invitado se desconecta, refrescar host
       call.on("close", () => {
         location.reload();
       });
