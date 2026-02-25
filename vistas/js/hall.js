@@ -1,87 +1,160 @@
-/* LOGICA PARA PEERJS */
-const customId = Math.floor(100000 + Math.random() * 900000).toString();
-const peer = new Peer(customId);
+function obtenerDatosSala() {
+  return new Promise((resolve, reject) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const idSala = urlParams.get("id");
 
-let localStream;
-let currentCall;
+    $.ajax({
+      type: "GET",
+      url: `endpoints/hall.endpoint.php?id=${idSala}`,
+      dataType: "json",
+      success: function (response) {
+        console.log("Data response:", response.data);
+        resolve(response.data);
+      },
+      error: function (error) {
+        console.error("Error al obtener datos de sala:", error);
+        reject(error);
+      },
+    });
+  });
+}
 
-// Referencias a elementos usando jQuery
-const $localVideo = $("#local-video");
-const $remoteVideo = $("#remote-video");
-const $micIcon = $("#mic-icon-guest");
-const $peerIdDisplay = $("#peer-id");
-const $statusBadge = $("#status-badge");
-const $callBox = $("#incoming-call-box");
-const $closeBtn = $("#close-room-btn");
+$(document).ready(function () {
+  /* INICIAR INTERFAZ DE SALA CON DATOS */
+  obtenerDatosSala().then((datosSala) => {
+    if (!datosSala) {
+      alert("No se pudieron obtener los datos de la sala.");
+      return;
+    }
+    console.log("Datos de la sala:", datosSala);
+  });
 
-// Iniciar cámara de inmediato
-navigator.mediaDevices
-  .getUserMedia({ video: true, audio: true })
-  .then((stream) => {
-    localStream = stream;
+  /* INICIAR PEER JS */
+  const codigoSala = async () => {
+    return new Promise((resolve, reject) => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const idSala = urlParams.get("id");
 
-    $localVideo[0].srcObject = stream;
-  })
-  .catch((err) => console.error("Error cámara:", err));
+      $.ajax({
+        type: "GET",
+        url: `endpoints/hall.endpoint.php?id=${idSala}`,
+        dataType: "json",
+        success: function (response) {
+          console.log("Código de sala obtenido:", response.data.numero);
+          resolve(response.data.numero);
+        },
+        error: function (error) {
+          console.error("Error al obtener código de sala:", error);
+          resolve(false);
+        },
+      });
+    });
+  };
 
-peer.on("open", (id) => {
-  $peerIdDisplay.text(id);
+  codigoSala().then((codigo) => {
+    if (!codigo) {
+      alert(
+        "No se pudo obtener el código de sala. Por favor, inténtalo de nuevo.",
+      );
+      return;
+    }
+    iniciarPeerJS(codigo);
+  });
 });
 
-peer.on("call", (call) => {
-  currentCall = call;
-  $callBox.removeClass("d-none");
+function iniciarPeerJS(codigoSala) {
+  if (!codigoSala) {
+    alert("Código de sala inválido.");
+    return;
+  }
 
-  // Manejo de botones con jQuery (.off para evitar duplicar eventos si hay re-llamadas)
-  $("#accept-btn")
-    .off("click")
-    .on("click", () => {
-      call.answer(localStream);
-      $callBox.addClass("d-none");
-      $closeBtn.removeClass("d-none");
+  /* LOGICA PARA PEERJS */
+  // const customId = Math.floor(100000 + Math.random() * 900000).toString();
+  const peer = new Peer(codigoSala);
 
-      call.on("stream", (remoteStream) => {
-        // Actualizar indicador a Online
-        $statusBadge
-          .text("ONLINE")
-          .removeClass("bg-secondary")
-          .addClass("bg-success");
+  let localStream;
+  let currentCall;
 
-        $remoteVideo[0].srcObject = remoteStream;
+  // Referencias a elementos usando jQuery
+  const $localVideo = $("#local-video");
+  const $remoteVideo = $("#remote-video");
+  const $micIcon = $("#mic-icon-guest");
+  const $peerIdDisplay = $("#peer-id");
+  const $statusBadge = $("#status-badge");
+  const $callBox = $("#incoming-call-box");
+  const $closeBtn = $("#close-room-btn");
 
-        // Forzar play y detección de tracks
-        $remoteVideo.on("loadedmetadata", function () {
-          this.play();
+  // Iniciar cámara de inmediato
+  navigator.mediaDevices
+    .getUserMedia({ video: true, audio: true })
+    .then((stream) => {
+      localStream = stream;
+
+      $localVideo[0].srcObject = stream;
+    })
+    .catch((err) => console.error("Error cámara:", err));
+
+  peer.on("open", (id) => {
+    $peerIdDisplay.text(id);
+  });
+
+  peer.on("call", (call) => {
+    currentCall = call;
+    $callBox.removeClass("d-none");
+
+    // Manejo de botones (.off para evitar duplicar eventos si hay re-llamadas)
+    $("#accept-btn")
+      .off("click")
+      .on("click", () => {
+        call.answer(localStream);
+        $callBox.addClass("d-none");
+        $closeBtn.removeClass("d-none");
+
+        call.on("stream", (remoteStream) => {
+          // Actualizar indicador a Online
+          $statusBadge
+            .text("ONLINE")
+            .removeClass("bg-secondary")
+            .addClass("bg-success");
+
+          $remoteVideo[0].srcObject = remoteStream;
+
+          // Forzar play y detección de tracks
+          $remoteVideo.on("loadedmetadata", function () {
+            this.play();
+          });
+
+          setTimeout(() => {
+            const hasVideo = remoteStream
+              .getVideoTracks()
+              .some((t) => t.enabled);
+            if (!hasVideo) {
+              $remoteVideo.addClass("d-none");
+              $micIcon.removeClass("d-none");
+            } else {
+              $remoteVideo.removeClass("d-none");
+              $micIcon.addClass("d-none");
+            }
+          }, 1000);
         });
 
-        setTimeout(() => {
-          const hasVideo = remoteStream.getVideoTracks().some((t) => t.enabled);
-          if (!hasVideo) {
-            $remoteVideo.addClass("d-none");
-            $micIcon.removeClass("d-none");
-          } else {
-            $remoteVideo.removeClass("d-none");
-            $micIcon.addClass("d-none");
-          }
-        }, 1000);
+        // Si el invitado se desconecta, refrescar host
+        call.on("close", () => {
+          location.reload();
+        });
       });
 
-      // Si el invitado se desconecta, refrescar host
-      call.on("close", () => {
-        location.reload();
+    $("#reject-btn")
+      .off("click")
+      .on("click", () => {
+        call.close();
+        $callBox.addClass("d-none");
       });
-    });
+  });
 
-  $("#reject-btn")
-    .off("click")
-    .on("click", () => {
-      call.close();
-      $callBox.addClass("d-none");
-    });
-});
-
-// Botón cerrar sala
-$closeBtn.on("click", () => {
-  if (currentCall) currentCall.close();
-  location.reload();
-});
+  // Botón cerrar sala
+  $closeBtn.on("click", () => {
+    if (currentCall) currentCall.close();
+    location.reload();
+  });
+}
