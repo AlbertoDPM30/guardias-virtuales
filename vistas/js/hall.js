@@ -1,3 +1,4 @@
+/* FUNCION PARA OBTENER DATOS DE SALA */
 function obtenerDatosSala() {
   return new Promise((resolve, reject) => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -13,6 +14,39 @@ function obtenerDatosSala() {
       },
       error: function (error) {
         console.error("Error al obtener datos de sala:", error);
+        reject(error);
+      },
+    });
+  });
+}
+
+/* FUNCION PARA CERRAR LA SALA */
+function cerrarSala(status) {
+  return new Promise((resolve, reject) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const idSala = urlParams.get("id");
+
+    const datos = {
+      id: idSala,
+      status: status,
+    };
+
+    $.ajax({
+      type: "PUT",
+      url: `endpoints/hall.endpoint.php`,
+      dataType: "json",
+      data: JSON.stringify(datos),
+      cache: false,
+      contentType: "application/json",
+      processData: false,
+      success: function (response) {
+        console.log("Sala cerrada:", response);
+        window.location.href = "dashboard";
+        resolve(response);
+      },
+      error: function (error) {
+        console.error("Error al cerrar sala:", error);
+        alert("Error al cerrar la sala.");
         reject(error);
       },
     });
@@ -45,7 +79,7 @@ $(document).ready(function () {
         },
         error: function (error) {
           console.error("Error al obtener código de sala:", error);
-          resolve(false);
+          reject(error);
         },
       });
     });
@@ -69,7 +103,6 @@ function iniciarPeerJS(codigoSala) {
   }
 
   /* LOGICA PARA PEERJS */
-  // const customId = Math.floor(100000 + Math.random() * 900000).toString();
   const peer = new Peer(codigoSala);
 
   let localStream;
@@ -158,3 +191,12 @@ function iniciarPeerJS(codigoSala) {
     location.reload();
   });
 }
+
+/* BOTON PARA CERRAR SALA */
+$("#btnSalirSala").on("click", function () {
+  if (confirm("¿Estás seguro de que deseas cerrar la sala?")) {
+    cerrarSala(0);
+  } else {
+    alert("La sala permanecerá abierta.");
+  }
+});

@@ -3,13 +3,19 @@
 <div class="bg-light ">
     <div class="container">
         <div class="row g-4">
-            <div class="col-12 col-lg-3">
+            <div class="col-12">
                 <div class="card shadow-sm border-0 mb-3 text-center">
                     <div class="card-body">
                         <small class="text-muted fw-bold text-uppercase">ID de Sala</small>
                         <h2 class="fw-bold text-primary mb-1" id="peer-id">...</h2>
                         <div id="status-badge" class="badge bg-secondary mb-3">OFFLINE</div>
                         <button id="close-room-btn" class="btn btn-danger btn-sm w-100 d-none">Cerrar Sala (Finalizar)</button>
+                    </div>
+
+                    <div class="btn-group d-flex mx-auto" role="group">
+                        <button class="btn btn-sm mx-auto mb-3 btn-warning" id="btnPausarSala">Pausar Sala</button>
+                        <button class="btn btn-sm mx-auto mb-3 btn-success d-none" id="btnReanudarSala">Reanudar Sala</button>
+                        <button class="btn btn-sm mx-auto mb-3 btn-danger" id="btnSalirSala">Salir de la Sala</button>
                     </div>
                 </div>
 

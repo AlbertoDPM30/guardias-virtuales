@@ -23,7 +23,7 @@ session_start();
     <script src="libraries/peerjs/peerjs.min.js.map"></script>
 
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed bg-light">
 
     <div class="wrapper">
 
