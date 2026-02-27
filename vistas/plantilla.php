@@ -14,13 +14,16 @@ session_start();
     <!-- <link rel="icon" href="vistas/img/plantilla/icono-consolitex.png"> -->
 
     <!-- ESTILOS -->
-    <link rel="stylesheet" href="vistas/css/estilos.css">
-    <link rel="stylesheet" href="libraries/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="vistas/css/estilos.css"> <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="libraries/bootstrap/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="libraries/fontawesome-free-6.7.2/css/all.min.css"> <!-- FontAwesome -->
 
     <!-- SCRIPTS -->
-    <script src="libraries/jquery/jquery-4-0-0.min.js"></script>
-    <script src="libraries/bootstrap/js/bootstrap.min.js"></script>
-    <script src="libraries/peerjs/peerjs.min.js.map"></script>
+    <script src="libraries/jquery/jquery-4-0-0.min.js"></script> <!-- jQuery -->
+    <script src="libraries/bootstrap/js/bootstrap.min.js"></script> <!-- Bootstrap JS -->
+    <script src="libraries/peerjs/peerjs.min.js.map"></script> <!-- PeerJS -->
+    
+
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed bg-light">

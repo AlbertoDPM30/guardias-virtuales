@@ -13,9 +13,9 @@
                     </div>
 
                     <div class="btn-group d-flex mx-auto" role="group">
-                        <button class="btn btn-sm mx-auto mb-3 btn-warning" id="btnPausarSala">Pausar Sala</button>
-                        <button class="btn btn-sm mx-auto mb-3 btn-success d-none" id="btnReanudarSala">Reanudar Sala</button>
-                        <button class="btn btn-sm mx-auto mb-3 btn-danger" id="btnSalirSala">Salir de la Sala</button>
+                        <button class="btn mx-auto mb-3 btn-outline-warning" id="btnPausarSala"><i class="fa-solid fa-pause"></i></button>
+                        <button class="btn mx-auto mb-3 btn-outline-success d-none" id="btnReanudarSala"><i class="fa-solid fa-play"></i></button>
+                        <button class="btn mx-auto mb-3 btn-outline-danger" id="btnSalirSala">Salir de la Sala</button>
                     </div>
                 </div>
 
