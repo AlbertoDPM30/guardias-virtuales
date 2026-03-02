@@ -1,15 +1,16 @@
+/* OBTENER PARAMETROS DESDE LA URL */
+const urlParams = new URLSearchParams(window.location.search);
+const idSala = urlParams.get("id");
+const idGuardia = urlParams.get("guardia");
+
 /* FUNCION PARA OBTENER DATOS DE SALA */
 function obtenerDatosSala() {
   return new Promise((resolve, reject) => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const idSala = urlParams.get("id");
-
     $.ajax({
       type: "GET",
       url: `endpoints/hall.endpoint.php?id=${idSala}`,
       dataType: "json",
       success: function (response) {
-        console.log("Data response:", response.data);
         resolve(response.data);
       },
       error: function (error) {
@@ -20,12 +21,42 @@ function obtenerDatosSala() {
   });
 }
 
+/* FINALIZAR GUARDIA */
+function finalizarGuardia(id, status) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: "endpoints/guardias.endpoint.php",
+      method: "PUT",
+      cache: false,
+      contentType: "application/json",
+      processData: false,
+      data: JSON.stringify({
+        id: id,
+        status: status,
+        final_guardia: new Date()
+          .toLocaleString("sv-SE", {
+            timeZone: "America/Caracas",
+          })
+          .replace(" ", "T"),
+      }),
+      success: function (response) {
+        if (response.success) {
+          resolve(true);
+        } else {
+          reject(false);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error al finalizar guardia:", error);
+        reject(error);
+      },
+    });
+  });
+}
+
 /* FUNCION PARA CERRAR LA SALA */
 function cerrarSala(status) {
   return new Promise((resolve, reject) => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const idSala = urlParams.get("id");
-
     const datos = {
       id: idSala,
       status: status,
@@ -40,8 +71,13 @@ function cerrarSala(status) {
       contentType: "application/json",
       processData: false,
       success: function (response) {
-        console.log("Sala cerrada:", response);
-        window.location.href = "dashboard";
+        finalizarGuardia(idGuardia, 0).then((dataGuardia) => {
+          if (dataGuardia) {
+            window.location.href = "dashboard";
+          } else {
+            alert("Error al finalizar la guardia. Permanecerás en la sala.");
+          }
+        });
         resolve(response);
       },
       error: function (error) {
@@ -54,13 +90,20 @@ function cerrarSala(status) {
 }
 
 $(document).ready(function () {
+  /* VALIDACION DE PARAMETROS */
+  if (!idSala || !idGuardia || isNaN(idSala) || isNaN(idGuardia)) {
+    alert("Ha ocurrido un error. Por favor, inténtalo de nuevo.");
+    cerrarSala(0);
+    window.location.href = "dashboard";
+    return;
+  }
+
   /* INICIAR INTERFAZ DE SALA CON DATOS */
   obtenerDatosSala().then((datosSala) => {
     if (!datosSala) {
       alert("No se pudieron obtener los datos de la sala.");
       return;
     }
-    console.log("Datos de la sala:", datosSala);
   });
 
   /* INICIAR PEER JS */
@@ -74,7 +117,6 @@ $(document).ready(function () {
         url: `endpoints/hall.endpoint.php?id=${idSala}`,
         dataType: "json",
         success: function (response) {
-          console.log("Código de sala obtenido:", response.data.numero);
           resolve(response.data.numero);
         },
         error: function (error) {

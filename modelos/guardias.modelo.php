@@ -41,32 +41,31 @@ class ModeloGuardias {
     =============================================*/
     static public function mdlCrearGuardia ($tabla, $datos) {
         try {
-            // Consulta SQL para insertar un nuevo guardia
-            $stmt = Conexion::conectar()->prepare(
+            $db = Conexion::conectar();
+
+            $stmt = $db->prepare(
                 "INSERT INTO 
-                $tabla (id_sala, id_usuario, inicio_guardia) 
-                VALUES (:id_sala, :id_usuario, :inicio_guardia)"
+                $tabla (id_sala, id_usuario) 
+                VALUES (:id_sala, :id_usuario)"
             );
 
-            // Vincular los parámetros
             $stmt->bindParam(":id_sala", $datos["id_sala"], PDO::PARAM_INT);
             $stmt->bindParam(":id_usuario", $datos["id_usuario"], PDO::PARAM_INT);
-            $stmt->bindParam(":inicio_guardia", $datos["inicio_guardia"], PDO::PARAM_STR);
 
-            // Ejecutar la consulta SQL
             if ($stmt->execute()) {
-                return true; // Retornar True si la inserción fue exitosa
+                // Retornamos el último ID insertado en esta conexión específica
+                return $db->lastInsertId(); 
             } else {
                 error_log("Error al crear guardia: " . implode(" ", $stmt->errorInfo()));
-                return false; // Retornar False si hubo un problema
+                return false; 
             }
 
         } catch (PDOException $e) {
             error_log("Error en mdlCrearGuardia: " . $e->getMessage());
-            return false; // Retornar False en caso de excepción
+            return false; 
         } finally {
-            if ($stmt) {
-                $stmt = null; // Cerrar la conexión y liberar recursos
+            if (isset($stmt)) {
+                $stmt = null; 
             }
         }
     }

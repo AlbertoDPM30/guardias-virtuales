@@ -1,39 +1,63 @@
 /* ACTUALIZAR STATUS DE LA SALA */
 function actualizarStatusSala(id, status) {
-  $.ajax({
-    url: "endpoints/hall.endpoint.php",
-    method: "PUT",
-    contentType: "application/json",
-    data: JSON.stringify({ id: id, status: status }),
-    success: function (response) {
-      console.log("Status actualizado:", response);
-    },
-    error: function (xhr, status, error) {
-      console.error("Error al actualizar status:", error);
-    },
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: "endpoints/hall.endpoint.php",
+      method: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify({ id: id, status: status }),
+      success: function (response) {
+        resolve(response);
+      },
+      error: function (xhr, status, error) {
+        console.error("Error al actualizar status:", error);
+        reject(error);
+      },
+    });
   });
 }
 
 /* OBTENER GUARDIA */
-const dataGuardia = null;
 function obtenerGuardia(filtro, id_sala) {
-  $.ajax({
-    url: `endpoints/guardias.endpoint.php?${filtro}=${id_sala}`,
-    method: "GET",
-    dataType: "json",
-    success: function (response) {
-      console.log("Guardia obtenida:", response);
-      dataGuardia = response.data;
-    },
-    error: function (xhr, status, error) {
-      console.error("Error al obtener guardia:", error);
-    },
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: `endpoints/guardias.endpoint.php?${filtro}=${id_sala}`,
+      method: "GET",
+      dataType: "json",
+      success: function (response) {
+        resolve(response.data);
+      },
+      error: function (xhr, status, error) {
+        console.error("Error al obtener guardia:", error);
+        reject(error);
+      },
+    });
   });
 }
 
-$("#btn-obtener-guardia").on("click", function () {
-  obtenerGuardia("id_sala", 1); // Ejemplo: obtener guardia por id_sala = 1
-});
+/* INICIAR GUARDIA */
+function iniciarGuardia(id_usuario, id_sala) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: "endpoints/guardias.endpoint.php",
+      method: "POST",
+      contentType: "application/json",
+      data: JSON.stringify({ id_usuario: id_usuario, id_sala: id_sala }),
+      success: function (response) {
+        if (response.success) {
+          console.log("Guardia creada con éxito:", response.data);
+          resolve(response.data); // Retornamos los datos de la guardia creada
+        } else {
+          resolve(response);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error al iniciar guardia:", error);
+        reject(error);
+      },
+    });
+  });
+}
 
 /* OBTENER TODAS LAS SALAS */
 function obtenerSalas() {
@@ -70,10 +94,71 @@ function obtenerSalas() {
       $(".btn-entrar-sala").on("click", function (e) {
         e.preventDefault();
         if ($(this).attr("data-status") === "0") {
-          actualizarStatusSala($(this).attr("data-id"), 1); // Marcar como ocupada
-          window.location.href = `hall?id=${$(this).attr("data-id")}`;
+          /* Si la sala está disponible */
+          actualizarStatusSala($(this).attr("data-id"), 1).then(
+            (statusSala) => {
+              if (statusSala) {
+                console.log(
+                  "Status de sala actualizado a ocupado. Iniciando guardia...",
+                );
+                /* Se crea una nueva guardia */
+                iniciarGuardia(
+                  sessionStorage.getItem("id_usuario"),
+                  $(this).attr("data-id"),
+                ).then(
+                  (idGuardia) => {
+                    if (idGuardia) {
+                      console.log("Guardia iniciada con ID:", idGuardia);
+                      window.location.href = `hall?id=${$(this).attr("data-id")}&guardia=${idGuardia}`;
+                    } else {
+                      actualizarStatusSala($(this).attr("data-id"), 0); // Revertir status a disponible
+                      alert("Error al iniciar la guardia. Inténtalo de nuevo.");
+                    }
+                  },
+                  (error) => {
+                    actualizarStatusSala($(this).attr("data-id"), 0); // Revertir status a disponible
+                    alert(
+                      "Error al iniciar la guardia. Comunicate con un administrador. " +
+                        error,
+                    );
+                    console.error("Error al iniciar guardia:", error);
+                  },
+                );
+              } else {
+                actualizarStatusSala($(this).attr("data-id"), 0); // Revertir status a disponible
+                alert(
+                  "Error al actualizar el estado de la sala. Inténtalo de nuevo.",
+                );
+              }
+            },
+            (error) => {
+              alert(
+                "Error al actualizar el estado de la sala. Inténtalo de nuevo.",
+              );
+              console.error("Error al actualizar status de sala:", error);
+            },
+          );
         } else {
-          alert("La sala está ocupada.");
+          /* Si la sala está ocupada */
+          obtenerGuardia("id_sala", $(this).attr("data-id"))
+            .then((dataGuardia) => {
+              if (dataGuardia) {
+                dataGuardia.forEach((guardia) => {
+                  if (
+                    guardia.id_usuario ==
+                      sessionStorage.getItem("id_usuario") &&
+                    guardia.id_sala == $(this).attr("data-id") &&
+                    guardia.status == "1"
+                  ) {
+                    window.location.href = `hall?id=${$(this).attr("data-id")}&guardia=${guardia.id}`;
+                  }
+                });
+              }
+            })
+            .catch((error) => {
+              console.error("Error al obtener guardia:", error);
+              alert("Error al obtener información del guardia.");
+            });
         }
       });
     },

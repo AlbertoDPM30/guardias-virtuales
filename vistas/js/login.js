@@ -20,6 +20,7 @@ $("#loginForm").on("submit", function (e) {
     success: function (response) {
       console.log(response);
       if (response.success) {
+        sessionStorage.setItem("id_usuario", response.data.id);
         window.location.href = "hall";
       } else {
         alert("Credenciales incorrectas");

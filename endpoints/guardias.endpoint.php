@@ -51,7 +51,7 @@ switch ($metodo) {
     REGISTRAR GUARDIA
     ==========================================*/
     case 'POST':
-        if (empty($entrada['id_sala']) || empty($entrada['id_usuario']) || empty($entrada['inicio_guardia'])) {
+        if (empty($entrada['id_sala']) || empty($entrada['id_usuario'])) {
             echo json_encode(["mensaje" => "Todos los campos son obligatorios"], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             exit;
         }

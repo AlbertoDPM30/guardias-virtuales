@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="d-flex flex-column align-items-center justify-content-between mb-4">
+    <div class="d-flex flex-column align-items-center justify-content-between mb-4 bg-light p-4 rounded shadow-lg">
         <h3>Bienvenido a la Guardia Virtual</h3>
         <h2 class="fw-bold"> <?php echo $_SESSION["nombres"]. " ".$_SESSION["apellidos"]; ?></h2>
     </div>

@@ -5,6 +5,8 @@
         <div class="row g-4">
             <div class="col-12">
                 <div class="card shadow-sm border-0 mb-3 text-center">
+                    <button class="btn ms-auto mt-3 me-3 btn-danger" id="btnSalirSala">Salir de la Sala <i class="fa-solid fa-right-from-bracket"></i></button>
+                    
                     <div class="card-body">
                         <small class="text-muted fw-bold text-uppercase">ID de Sala</small>
                         <h2 class="fw-bold text-primary mb-1" id="peer-id">...</h2>
@@ -12,10 +14,9 @@
                         <button id="close-room-btn" class="btn btn-danger btn-sm w-100 d-none">Cerrar Sala (Finalizar)</button>
                     </div>
 
-                    <div class="btn-group d-flex mx-auto" role="group">
-                        <button class="btn mx-auto mb-3 btn-outline-warning" id="btnPausarSala"><i class="fa-solid fa-pause"></i></button>
-                        <button class="btn mx-auto mb-3 btn-outline-success d-none" id="btnReanudarSala"><i class="fa-solid fa-play"></i></button>
-                        <button class="btn mx-auto mb-3 btn-outline-danger" id="btnSalirSala">Salir de la Sala</button>
+                    <div class="d-flex mx-auto" role="group">
+                        <button class="btn mx-auto mb-3 btn-warning" id="btnPausarSala"><i class="fa-solid fa-pause"></i></button>
+                        <button class="btn mx-auto mb-3 btn-success d-none" id="btnReanudarSala"><i class="fa-solid fa-play"></i></button>
                     </div>
                 </div>
 
@@ -52,5 +53,18 @@
             </div>
         </div>
     </div>
-    <script src="vistas/js/hall.js"></script>
 </div>
+
+<div class="timer-container">
+    <div id="display">00:00:00</div>
+    <button id="start">Iniciar</button>
+    <button id="stop" disabled>Parar</button>
+    <button id="reset">Reiniciar</button>
+    
+    <div id="log-area" style="margin-top: 20px;">
+        <h3>Tiempos guardados:</h3>
+        <ul id="saved-times" style="list-style: none; padding: 0;"></ul>
+    </div>
+</div>
+
+<script src="vistas/js/hall.js"></script>
