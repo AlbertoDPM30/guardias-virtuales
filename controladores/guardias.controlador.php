@@ -21,12 +21,14 @@ class ControladorGuardias
 
         if ($respuesta !== false) {
 
+            date_default_timezone_set('America/Caracas');
+            $fechaInicio = date("Y-m-d H:i:s"); // Obtener la fecha y hora actual
+
             return array(
                 "success" => true,
                 "status" => 201,
                 "mensaje" => "Guardia creada con éxito",
                 "data" => $respuesta, // Retornamos el ID de la guardia creada
-                "inicio" => $datos["fecha_inicio"] // Enviar la fecha de inicio para el temporizador
             );
         } else {
 
@@ -66,21 +68,26 @@ class ControladorGuardias
         $tabla = "guardias";
 
         // Verificar si se solicita calcular la duración
-        if (isset($entrada["duracion"]) && $entrada["duracion"] == true) {
+        date_default_timezone_set('America/Caracas');
+        $tz = new DateTimeZone('America/Caracas');
+
+        if (isset($entrada["final_guardia"]) && !empty($entrada["final_guardia"])) {
             
-            // Obtener la fecha de inicio del registro (desde la BD usando el ID)
             $guardiaActual = ModeloGuardias::mdlMostrarGuardias($tabla, "id", $entrada["id"]);
-            $fechaInicio = new DateTime($guardiaActual["fecha_inicio"]);
-            $fechaFin = new DateTime(); // Ahora mismo
             
-            // Calcular la diferencia
+            //  Objetos DateTime asegurando la zona horaria de Caracas
+            $fechaInicio = new DateTime($guardiaActual["inicio_guardia"], $tz);
+            $fechaFin = new DateTime($entrada["final_guardia"], $tz); 
+            
+            //  Calcular la diferencia
             $intervalo = $fechaInicio->diff($fechaFin);
             
-            // Formatear para MySQL tipo TIME (HH:MM:SS)
-            // %H permite más de 24 horas si fuera necesario
-            $tiempoTranscurrido = $intervalo->format('%H:%I:%S');
+            //  Calcular horas totales (por si pasa de 24h)
+            $horasTotales = ($intervalo->days * 24) + $intervalo->h;
             
-            // Inyectamos el resultado en el array que se enviará al Modelo
+            //  Formatear el resultado final
+            $tiempoTranscurrido = sprintf('%02d:%02d:%02d', $horasTotales, $intervalo->i, $intervalo->s);
+            
             $entrada["duracion"] = $tiempoTranscurrido;
         }
 
@@ -91,7 +98,8 @@ class ControladorGuardias
             return array(
                 "success" => true,
                 "status" => 200,
-                "mensaje" => "Guardia actualizada con éxito"
+                "mensaje" => "Guardia actualizada con éxito",
+                "tiempo_total" => $entrada["duracion"] ?? null
             );
         } else {
 

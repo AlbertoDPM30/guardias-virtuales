@@ -55,16 +55,4 @@
     </div>
 </div>
 
-<div class="timer-container">
-    <div id="display">00:00:00</div>
-    <button id="start">Iniciar</button>
-    <button id="stop" disabled>Parar</button>
-    <button id="reset">Reiniciar</button>
-    
-    <div id="log-area" style="margin-top: 20px;">
-        <h3>Tiempos guardados:</h3>
-        <ul id="saved-times" style="list-style: none; padding: 0;"></ul>
-    </div>
-</div>
-
 <script src="vistas/js/hall.js"></script>

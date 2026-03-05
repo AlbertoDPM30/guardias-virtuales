@@ -21,6 +21,24 @@ function obtenerDatosSala() {
   });
 }
 
+/* OBTENER DATOS DE GUARDIA */
+function obtenerDatosGuardia() {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: `endpoints/guardias.endpoint.php?id=${idGuardia}`,
+      dataType: "json",
+      success: function (response) {
+        resolve(response.data);
+      },
+      error: function (error) {
+        console.error("Error al obtener datos de guardia:", error);
+        reject(error);
+      },
+    });
+  });
+}
+
 /* FINALIZAR GUARDIA */
 function finalizarGuardia(id, status) {
   return new Promise((resolve, reject) => {
@@ -33,11 +51,9 @@ function finalizarGuardia(id, status) {
       data: JSON.stringify({
         id: id,
         status: status,
-        final_guardia: new Date()
-          .toLocaleString("sv-SE", {
-            timeZone: "America/Caracas",
-          })
-          .replace(" ", "T"),
+        final_guardia: new Date().toLocaleString("sv-SE", {
+          timeZone: "America/Caracas",
+        }),
       }),
       success: function (response) {
         if (response.success) {
@@ -90,6 +106,7 @@ function cerrarSala(status) {
 }
 
 $(document).ready(function () {
+  obtenerDatosGuardia();
   /* VALIDACION DE PARAMETROS */
   if (!idSala || !idGuardia || isNaN(idSala) || isNaN(idGuardia)) {
     alert("Ha ocurrido un error. Por favor, inténtalo de nuevo.");

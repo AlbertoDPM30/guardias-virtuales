@@ -109,7 +109,7 @@ function obtenerSalas() {
                   (idGuardia) => {
                     if (idGuardia) {
                       console.log("Guardia iniciada con ID:", idGuardia);
-                      window.location.href = `hall?id=${$(this).attr("data-id")}&guardia=${idGuardia}`;
+                      window.location.href = `hall?id=${$(this).attr("data-id")}&guardia=${idGuardia}`; // Redirigir a la sala con el ID de la guardia
                     } else {
                       actualizarStatusSala($(this).attr("data-id"), 0); // Revertir status a disponible
                       alert("Error al iniciar la guardia. Inténtalo de nuevo.");
